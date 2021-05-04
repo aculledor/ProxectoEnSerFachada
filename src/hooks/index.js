@@ -34,9 +34,7 @@ export function useUser(id = null) {
     useEffect(() => {
         API.instance()
             .findUser(userId)
-            .then(user => {
-                setData(user)
-            })
+            .then(setData)
     }, [userId])
 
     const create = user => API.instance()
