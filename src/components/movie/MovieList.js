@@ -5,6 +5,7 @@ import { ChevronLeftOutline as Left, ChevronRightOutline as Right } from '@grayw
 import { Button } from '../'
 
 import { useMovies } from '../../hooks'
+import sampleData from "../../helper/sampleData";
 
 export function MovieList({
                               title = '',
@@ -61,7 +62,7 @@ function Poster({className = '', movie}) {
     >
         <Link to = { `/movies/${movie.id}` }>
             <img className = 'w-full h-full object-cover'
-                 src = { movie.resources.find(res => res.type === 'POSTER').url }
+                 src = { movie.resources.find(res => res.type === 'POSTER')?.url || sampleData.avatar }
                  alt = { `${movie.title } poster` } />
         </Link>
     </li>

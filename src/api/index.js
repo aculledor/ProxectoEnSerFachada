@@ -49,12 +49,12 @@ export default class API {
     //Get all movies
     async findMovies(
         {
-            filter: { title = '', keywords = [''], genre = '', genres = [''], crew = [''], cast = [''], producers = [''], releaseDate = '', status = ''} =
-                { title: '', keywords: [], genre: '', genres: [], crew: [], cast: [], producers: [], releaseDate: '', status: ''},
+            filter: { title = '', keywords = [], genres = [], crew = [], cast = [], producers = [], releaseDate = '', status = ''} =
+                { title: '', keywords: [], genres: [], crew: [], cast: [], producers: [], releaseDate: '', status: ''},
             sort,
             pagination: {page = 0, size = 10} = {page: 0, size: 10}
         } = {
-            filter: { title: '', keywords: [], genre: '', genres: [], crew: [], cast: [], producers: [], releaseDate: '', status: ''},
+            filter: { title: '', keywords: [], genres: [], crew: [], cast: [], producers: [], releaseDate: '', status: ''},
             sort: {},
             pagination: {page: 0, size: 10}
         }
@@ -63,26 +63,30 @@ export default class API {
 
         // Filter
         if (title) url += 'title='+title
-        if (keywords) {
+        if (keywords.length) {
             let aux = (url === '')? 'keywords=' : '&keywords='
-            keywords.forEach((keyword) => aux += (aux === '&keywords=') ? keyword : ','+keyword)
+            keywords.forEach((keyword) => aux += (aux === 'keywords=' || aux === '&keywords=') ? keyword : ','+keyword)
+            url += aux
         }
-        if (genre) url += (url === '')? 'genre='+genre : '&genre='+genre
-        if (genres) {
+        if (genres.length) {
             let aux = (url === '')? 'genres=' : '&genres='
-            genres.forEach((keyword) => aux += (aux === '&genres=') ? keyword : ','+keyword)
+            genres.forEach((keyword) => aux += (aux === 'genres=' || aux === '&genres=') ? keyword : ','+keyword)
+            url += aux
         }
-        if (crew) {
+        if (crew.length) {
             let aux = (url === '')? 'crew=' : '&crew='
-            crew.forEach((keyword) => aux += (aux === '&crew=') ? keyword : ','+keyword)
+            crew.forEach((keyword) => aux += (aux === 'crew=' || aux === '&crew=') ? keyword : ','+keyword)
+            url += aux
         }
-        if (cast) {
+        if (cast.length) {
             let aux = (url === '')? 'cast=' : '&cast='
-            cast.forEach((keyword) => aux += (aux === '&cast=') ? keyword : ','+keyword)
+            cast.forEach((keyword) => aux += (aux === 'cast=' || aux === '&cast=') ? keyword : ','+keyword)
+            url += aux
         }
-        if (producers) {
+        if (producers.length) {
             let aux = (url === '')? 'producers=' : '&producers='
-            producers.forEach((keyword) => aux += (aux === '&producers=') ? keyword : ','+keyword)
+            producers.forEach((keyword) => aux += (aux === 'producers=' || aux === '&producers=') ? keyword : ','+keyword)
+            url += aux
         }
         if (releaseDate) url += (url === '')? 'releaseDate='+releaseDate : '&releaseDate='+releaseDate
         if (status) url += (url === '')? 'status='+status : '&status='+status
@@ -90,7 +94,13 @@ export default class API {
         // Sort
         if (sort) {
             let aux = (url === '')? 'sort=' : '&sort='
-            Object.keys(sort).forEach((keyword) => aux += (aux === '&sort=') ? keyword : ','+keyword)
+            Object.keys(sort).forEach((keyword) => {
+                if (sort[keyword] === 'ASC')
+                    aux += (aux === 'sort=' || aux === '&sort=') ? '+'+keyword : ',+'+keyword
+                if (sort[keyword] === 'DESC')
+                    aux += (aux === 'sort=' || aux === '&sort=') ? '-'+keyword : ',-'+keyword
+            })
+            url += aux
         }
 
         // Pagination
@@ -156,7 +166,13 @@ export default class API {
         // Sort
         if (sort) {
             let aux = (urlAux === '')? 'sort=' : '&sort='
-            Object.keys(sort).forEach((keyword) => aux += (aux === '&sort=') ? keyword : ','+keyword)
+            Object.keys(sort).forEach((keyword) => {
+                if (sort[keyword] === 'ASC')
+                    aux += (aux === 'sort=' || aux === '&sort=') ? '+'+keyword : ',+'+keyword
+                if (sort[keyword] === 'DESC')
+                    aux += (aux === 'sort=' || aux === '&sort=') ? '-'+keyword : ',-'+keyword
+            })
+            urlAux += aux
         }
 
         // Pagination
