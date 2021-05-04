@@ -14,6 +14,7 @@ import { useDebouncedCallback as useDebounce } from 'use-debounce'
 import { AuthenticationContext } from '../../context'
 import { Logo, Button, Input, MovieList } from '../'
 import { useUser } from '../../hooks'
+import sampleData from "../../helper/sampleData";
 
 function tryParse(query) {
     try{
@@ -122,7 +123,7 @@ export function Shell({children, className = ''}) {
 
 function AppMenu() {
     const { logout } = useContext(AuthenticationContext)
-    const { user: { name = '', email = '', picture = '' } } = useUser()
+    const { user: { name = '', email = '', picture = '' } = { name: '', email: '', picture: sampleData.avatar } } = useUser()
 
     return <Menu>
         { ({open}) => <>

@@ -13,6 +13,7 @@ import ITunes from './icons/itunes.png'
 import Netflix from './icons/netflix.png'
 import Prime from './icons/prime_video.png'
 import Youtube from './icons/youtube.png'
+import sampleData from "../../helper/sampleData";
 
 const backdrop = movie => {
     const backdrop = movie?.resources?.find(res => res?.type === 'BACKDROP')?.url
@@ -168,7 +169,7 @@ function Links({ movie }) {
 }
 function CastMember({ person }) {
     return <li className = 'overflow-hidden'>
-        <img src = { person?.picture }
+        <img src = { person?.picture || sampleData.avatar }
              alt = { `${person.name} profile` }
              className = 'w-full object-top object-cover rounded shadow'
              style = {{ aspectRatio: '2/3' }}/>
