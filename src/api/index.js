@@ -29,17 +29,10 @@ export default class API {
         })
 
         if(response.ok) {
-            const body = await response.headers.get('authentication')
-            this.#token = body
+            this.#token = await response.headers.get('authentication')
             localStorage.setItem('user', email)
             localStorage.setItem('token', this.#token)
             return true
-
-
-            //console.log(body)
-            //const promise = await this.findUser('pruba@uno.com')
-            //const data = await promise.json()
-            //console.log(data)
         }
         return false
 
@@ -56,17 +49,58 @@ export default class API {
     //Get all movies
     async findMovies(
         {
-            filter: { title= '', keywords = [''], genre= '', genres = [''], crew = [''], cast = [''], producers = [''], releaseDate = '', status= ''} =
-                {  title: '', keywords: [], genre: '', genres: [], crew: [], cast: [], producers: [], releaseDate: '', status: '' },
-            sort = [''],
-            pagination: {page = 0, size = 10} = { page: 0, size: 10 }
+            filter: { title = '', keywords = [''], genre = '', genres = [''], crew = [''], cast = [''], producers = [''], releaseDate = '', status = ''} =
+                { title: '', keywords: [], genre: '', genres: [], crew: [], cast: [], producers: [], releaseDate: '', status: ''},
+            sort,
+            pagination: {page = 0, size = 10} = {page: 0, size: 10}
         } = {
-            filter: {  title: '', keywords: [], genre: '', genres: [], crew: [], cast: [], producers: [], releaseDate: '', status: '' },
-            sort: [],
-            pagination: { page: 0, size: 10 }
+            filter: { title: '', keywords: [], genre: '', genres: [], crew: [], cast: [], producers: [], releaseDate: '', status: ''},
+            sort: {},
+            pagination: {page: 0, size: 10}
         }
     ) {
-        const data =  await fetch('/api/movies', {
+        let url = ('')
+
+        // Filter
+        if (title) url += 'title='+title
+        if (keywords) {
+            let aux = (url === '')? 'keywords=' : '&keywords='
+            keywords.forEach((keyword) => aux += (aux === '&keywords=') ? keyword : ','+keyword)
+        }
+        if (genre) url += (url === '')? 'genre='+genre : '&genre='+genre
+        if (genres) {
+            let aux = (url === '')? 'genres=' : '&genres='
+            genres.forEach((keyword) => aux += (aux === '&genres=') ? keyword : ','+keyword)
+        }
+        if (crew) {
+            let aux = (url === '')? 'crew=' : '&crew='
+            crew.forEach((keyword) => aux += (aux === '&crew=') ? keyword : ','+keyword)
+        }
+        if (cast) {
+            let aux = (url === '')? 'cast=' : '&cast='
+            cast.forEach((keyword) => aux += (aux === '&cast=') ? keyword : ','+keyword)
+        }
+        if (producers) {
+            let aux = (url === '')? 'producers=' : '&producers='
+            producers.forEach((keyword) => aux += (aux === '&producers=') ? keyword : ','+keyword)
+        }
+        if (releaseDate) url += (url === '')? 'releaseDate='+releaseDate : '&releaseDate='+releaseDate
+        if (status) url += (url === '')? 'status='+status : '&status='+status
+
+        // Sort
+        if (sort) {
+            let aux = (url === '')? 'sort=' : '&sort='
+            Object.keys(sort).forEach((keyword) => aux += (aux === '&sort=') ? keyword : ','+keyword)
+        }
+
+        // Pagination
+        if (page) url += (url === '')? 'page='+page : '&page='+page
+        if (size) url += (url === '')? 'size='+size : '&size='+size
+
+        url = (url === '')? '/api/movies' : '/api/movies?'+url
+        console.log(url)
+
+        const data =  await fetch(url, {
             method: 'GET',
             headers: {
                 'Authorization': this.#token,
@@ -75,24 +109,6 @@ export default class API {
             }
         })
         return await data.json()
-
-        return new Promise(resolve => {
-            const filtered = DATA.movies
-                ?.filter(movie => movie.title.toLowerCase().includes(title.toLowerCase() || ''))
-                ?.filter(movie => genre !== '' ? movie.genres.map(genre => genre.toLowerCase()).includes(genre.toLowerCase()) : true)
-                ?.filter(movie => movie.status.toLowerCase().includes(status.toLowerCase() || ''))
-
-            const data = {
-                content: filtered?.slice(size * page, size * page + size),
-                pagination: {
-                    hasNext: size * page + size < filtered.length,
-                    hasPrevious: page > 0
-                }
-            }
-
-            resolve(data)
-        })
-
     }
 
     //Get one movie
@@ -133,20 +149,33 @@ export default class API {
             pagination: { page: 0, size: 10}
         }
     ) {
-        return new Promise(resolve => {
-            const filtered = DATA.comments
-                ?.filter(comment => comment?.movie?.id === movie)
+        if (!movie && ! user) return undefined
 
-            const data = {
-                content: filtered?.slice(size * page, size * page + size),
-                pagination: {
-                    hasNext: size * page + size < filtered.length,
-                    hasPrevious: page > 0
-                }
+        let urlAux = ('')
+
+        // Sort
+        if (sort) {
+            let aux = (urlAux === '')? 'sort=' : '&sort='
+            Object.keys(sort).forEach((keyword) => aux += (aux === '&sort=') ? keyword : ','+keyword)
+        }
+
+        // Pagination
+        if (page) urlAux += (urlAux === '')? 'page='+page : '&page='+page
+        if (size) urlAux += (urlAux === '')? 'size='+size : '&size='+size
+
+        let url = (movie)? '/api/movies/'+movie+'/assessments' : '/api/users/'+user+'/assessments'
+        if (user !== '') url += '?' + urlAux
+        console.log(url)
+
+        const data =  await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': this.#token,
+                'Content-Type': 'application/json',
+                'Accepts': 'application/json'
             }
-
-            resolve(data)
         })
+        return await data.json()
     }
 
     //Create an assessment
