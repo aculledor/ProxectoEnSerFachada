@@ -29,7 +29,7 @@ export default function Login() {
                 setErrors(true)
             } else {
                 await create({
-                    email: data.get('email'),
+                    email: data.get('user'),
                     name: data.get('name'),
                     password: data.get('password'),
                     birthday: {
