@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom'
 import { ArrowCircleLeftOutline as Back, PencilAltOutline as Edit } from '@graywolfai/react-heroicons'
 import ReactPlayer from 'react-player'
+import Film from "../../components/icons/Film";
 
 import { Shell, Link, TODO, Separator } from '../../components'
 
@@ -14,6 +15,7 @@ import Netflix from './icons/netflix.png'
 import Prime from './icons/prime_video.png'
 import Youtube from './icons/youtube.png'
 import sampleData from "../../helper/sampleData";
+import {CommentCarousel} from "../../components/comments/CommentCarousel";
 
 const backdrop = movie => {
     const backdrop = movie?.resources?.find(res => res?.type === 'BACKDROP')?.url
@@ -54,6 +56,7 @@ export default function Movie() {
             <View movie = { movie } />
             <Cast movie = { movie } />
             <Comments movie = { movie } />
+            <PublishComment movie = {movie} />
         </div>
     </Shell>
 }
@@ -118,13 +121,89 @@ function Cast({ movie }) {
         </ul>
     </>
 }
+
+
 function Comments({ movie }) {
     const { comments, createComment } = useComments({ filter: { movie : movie.id } } )
 
-    return <div className = 'mt-16'>
-        <TODO>Añadir lista de comentarios y formulario para añadir nuevo comentario</TODO>
-    </div>
+    return <>
+        <h2 className = 'mt-16 font-bold text-2xl'>Comentarios</h2>
+        <Separator />
+        <ul className = 'flex gap-8 overflow-x-auto '>
+            {
+                comments?.content?.map(comment => <Comment key = { comment.id } comment = { comment }/>)
+            }
+        </ul>
+    </>
 }
+function Comment({ comment }) {
+    let ratingIcons = ArrayRating(comment.rating)
+    return <li className = 'border-2 rounded-md p-8 shadow-xl min-w-2/3'>
+        <div className ="flex float-left">
+            <span className = 'text-sm font-bold left-0'> { comment?.user } </span>
+        </div>
+        <div className ="flex gap-1 float-right">
+            {
+                ratingIcons?.map(icon => <Film key = {ratingIcons.indexOf(icon)} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>)
+            }
+        </div>
+        <br/><br/>
+        <div className ="break-words">
+            <p> { comment?.comment } </p>
+        </div>
+    </li>
+}
+function PublishComment({ movie }) {
+    let icon = {
+        className: "h-5 w-5 bg-gray-300 rounded-full p-0.5 transform -rotate-6",
+        strokeWidth: 3,
+        strokeColor: "white"
+    }
+    return <>
+        <div className ="mt-16">
+            <div className = 'block max-w-1/4'>
+                <span className = 'font-bold block flex float-left'>Y a ti, que te ha parecido?</span>
+                <span className = 'mt-4 text-sm block flex float-start gap-1 flex float-left'>
+                    <Film key = {1} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>
+                    <Film key = {2} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>
+                    <Film key = {3} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>
+                    <Film key = {4} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>
+                    <Film key = {5} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>
+                    <Film key = {6} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>
+                    <Film key = {7} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>
+                    <Film key = {8} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>
+                    <Film key = {9} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>
+                    <Film key = {10} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>
+                </span>
+            </div>
+            <div className = 'border-2 rounded-md p-8 shadow-xl min-w-3/4 flex float-right'>
+
+            </div>
+        </div>
+        <br/><br/>
+    </>
+}
+
+function ArrayRating(rating) {
+    let ratingIcons = []
+    for(let i = 0; i < 10-rating; i++){
+        ratingIcons.push({
+            className: "h-5 w-5 bg-gray-300 rounded-full p-0.5 transform -rotate-6",
+            strokeWidth: 3 ,
+            strokeColor: "white"
+        })
+    }
+    for(let i = 0; i < rating; i++){
+        ratingIcons.push({
+            className: "rounded-full h-5 w-5 bg-gradient-to-br from-pink-500 via-red-500 p-0.5 to-yellow-500 transform -rotate-6",
+            strokeWidth: 3,
+            strokeColor: "white"
+        })
+    }
+    return ratingIcons
+}
+
+
 function Tagline({ movie }) {
     if(movie.tagline) {
         return <q className={`block text-3xl font-semibold text-black italic w-full px-8 py-4 text-right`}>
