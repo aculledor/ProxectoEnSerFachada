@@ -195,17 +195,56 @@ export default class API {
     }
 
     //Create an assessment
-    async createComment(comment) {
-        return new Promise(resolve => {
-            DATA.comments.unshift(comment)
-
-            resolve(true)
+    async createComment(comment = {id : 0, user : "test@test.com", movie : "111", rating : 5, comment : "I like it"}) {
+        const url = "/api/movies/" + comment.movie + "/assessments";
+        console.log(JSON.stringify(comment))
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': this.#token,
+                'Content-Type': 'application/json',
+                'Accepts': 'application/json'
+            },
+            body: JSON.stringify(comment)
         })
+
+        if(response.ok) {
+            return true
+        }
+        return false
     }
 
     //Create an user
-    async createUser(user) {
-        console.log(user)
+    async createUser(email = '', pass = '', nombre = '', birthday = '') {
+        const url = "/api/users";
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accepts': 'application/json'
+            },
+            body: JSON.stringify({
+                "email": email,
+                "name" : nombre,
+                "country" : '',
+                "picture" : '',
+                "birthday" : {
+                    "day" : 0,
+                    "month" : 0,
+                    "year" : 0
+                },
+                "password": pass,
+                "roles" : [ "ROLE_USER"]
+            })
+        })
+
+        if(response.ok) {
+            this.#token = await response.headers.get('authentication')
+            localStorage.setItem('user', email)
+            localStorage.setItem('token', this.#token)
+            return true
+        }
+        return false
     }
 
     //Update an user

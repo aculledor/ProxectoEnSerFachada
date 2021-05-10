@@ -5,7 +5,8 @@ import Film from "../../components/icons/Film";
 
 import { Shell, Link, TODO, Separator } from '../../components'
 
-import { useMovie, useComments } from '../../hooks'
+import {useMovie, useComments, useUser} from '../../hooks'
+
 
 import Disney from './icons/disney_plus.png'
 import Play from './icons/google_play.png'
@@ -15,7 +16,7 @@ import Netflix from './icons/netflix.png'
 import Prime from './icons/prime_video.png'
 import Youtube from './icons/youtube.png'
 import sampleData from "../../helper/sampleData";
-import {CommentCarousel} from "../../components/comments/CommentCarousel";
+import {useState} from "react";
 
 const backdrop = movie => {
     const backdrop = movie?.resources?.find(res => res?.type === 'BACKDROP')?.url
@@ -24,6 +25,7 @@ const backdrop = movie => {
     return backdrop ? backdrop : poster
 }
 const poster = movie => movie?.resources?.find(res => res?.type === 'POSTER')?.url
+let movieID = '';
 
 export default function Movie() {
     const { id } = useParams()
@@ -56,7 +58,6 @@ export default function Movie() {
             <View movie = { movie } />
             <Cast movie = { movie } />
             <Comments movie = { movie } />
-            <PublishComment movie = {movie} />
         </div>
     </Shell>
 }
@@ -123,8 +124,81 @@ function Cast({ movie }) {
 }
 
 
-function Comments({ movie }) {
+export function Comments({ movie }) {
     const { comments, createComment } = useComments({ filter: { movie : movie.id } } )
+    const [score, setScore] = useState(0)
+    const [comment, setComment] = useState('')
+    const { user: { name = '', email = '', picture = '' } = { name: '', email: '', picture: sampleData.avatar } } = useUser()
+
+    const create = async (event) => {
+        event.preventDefault()
+        await createComment({movie : movie.id, rating : score, comment : comment, user : email})
+    }
+
+    function Comment({ comment }) {
+        let ratingIcons = ArrayRating(comment.rating)
+        return <li className = 'border-2 rounded-md p-8 shadow-xl min-w-2/3'>
+            <div className ="flex float-left">
+                <span className = 'text-sm font-bold left-0'> { comment?.user } </span>
+            </div>
+            <div className ="flex gap-1 float-right">
+                {
+                    ratingIcons?.map(icon => <Film key = {ratingIcons.indexOf(icon)} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>)
+                }
+            </div>
+            <br/><br/>
+            <div className ="break-words">
+                <p> { comment?.comment } </p>
+            </div>
+        </li>
+    }
+
+    function PublishComment({ movie }) {
+        return <>
+            <form className = 'mt-16 mb-16 relative h-64'
+                  onSubmit={create}
+                  autoComplete = 'off' >
+                <span className = 'max-w-1/5 max-h-min block font-bold block flex float-left'>Y a ti, que te ha parecido?</span>
+                <br/><br/>
+                {[...new Array(10).keys()].map(id =>
+                    <button id={10-id} key={10-id} className='w-5 h-5 mr-1 focus:outline-none rounded-full' type='submit' onClick={() => setScore(10-id)} >
+                        {<Film className={10-id <= score ?  'rounded-full h-5 w-5 bg-gradient-to-br from-pink-500 via-red-500 p-0.5 to-yellow-500 transform -rotate-6' : 'h-5 w-5 bg-gray-300 rounded-full p-0.5 transform -rotate-6'}
+                               strokeWidth={3}
+                               strokeColor={'white'}/>}
+                    </button>
+                )}
+                <textarea className = 'absolute top-0 right-0 min-w-3/4 mb-16 border-2 rounded-md p-8 shadow-xl min-w-3/4 h-64'
+                          inputMode='text' placeholder='Escribe aqui tu comentario y comparte tu opinión con otros usuarios! Pero por favor, evita hacer spoilers'
+                          value = {comment} onChange={ evt => setComment(evt.target.value) } />
+                <button className='absolute bottom-0 left-0 w-1/5 h-16 font-bold text-white rounded-md
+                                bg-gradient-to-br from-pink-500 via-red-500 p-0.5 to-yellow-500
+                                hover:from-green-500 hover:to-blue-500 hover:via-teal-500
+                                focus:from-green-500 focus:to-blue-500 focus:via-teal-500 focus:outline-none'
+                        type = 'submit' variant = 'secondary' >
+                    Publicar
+                </button>
+            </form>
+        </>
+    }
+
+    function ArrayRating(rating = 0) {
+        let ratingIcons = []
+        for(let i = 0; i < 10-rating; i++){
+            ratingIcons.push({
+                className: "h-5 w-5 bg-gray-300 rounded-full p-0.5 transform -rotate-6",
+                strokeWidth: 3 ,
+                strokeColor: "white"
+            })
+        }
+        for(let i = 0; i < rating; i++){
+            ratingIcons.push({
+                className: "rounded-full h-5 w-5 bg-gradient-to-br from-pink-500 via-red-500 p-0.5 to-yellow-500 transform -rotate-6",
+                strokeWidth: 3,
+                strokeColor: "white"
+            })
+        }
+        return ratingIcons
+    }
 
     return <>
         <h2 className = 'mt-16 font-bold text-2xl'>Comentarios</h2>
@@ -134,74 +208,11 @@ function Comments({ movie }) {
                 comments?.content?.map(comment => <Comment key = { comment.id } comment = { comment }/>)
             }
         </ul>
-    </>
-}
-function Comment({ comment }) {
-    let ratingIcons = ArrayRating(comment.rating)
-    return <li className = 'border-2 rounded-md p-8 shadow-xl min-w-2/3'>
-        <div className ="flex float-left">
-            <span className = 'text-sm font-bold left-0'> { comment?.user } </span>
-        </div>
-        <div className ="flex gap-1 float-right">
-            {
-                ratingIcons?.map(icon => <Film key = {ratingIcons.indexOf(icon)} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>)
-            }
-        </div>
-        <br/><br/>
-        <div className ="break-words">
-            <p> { comment?.comment } </p>
-        </div>
-    </li>
-}
-function PublishComment({ movie }) {
-    let icon = {
-        className: "h-5 w-5 bg-gray-300 rounded-full p-0.5 transform -rotate-6",
-        strokeWidth: 3,
-        strokeColor: "white"
-    }
-    return <>
-        <div className ="mt-16">
-            <div className = 'block max-w-1/4'>
-                <span className = 'font-bold block flex float-left'>Y a ti, que te ha parecido?</span>
-                <span className = 'mt-4 text-sm block flex float-start gap-1 flex float-left'>
-                    <Film key = {1} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>
-                    <Film key = {2} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>
-                    <Film key = {3} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>
-                    <Film key = {4} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>
-                    <Film key = {5} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>
-                    <Film key = {6} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>
-                    <Film key = {7} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>
-                    <Film key = {8} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>
-                    <Film key = {9} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>
-                    <Film key = {10} className={icon.className} strokeWidth={icon.strokeWidth} strokeColor={icon.strokeColor}/>
-                </span>
-            </div>
-            <div className = 'border-2 rounded-md p-8 shadow-xl min-w-3/4 flex float-right'>
-
-            </div>
-        </div>
-        <br/><br/>
+        <PublishComment movie = {movie} />
     </>
 }
 
-function ArrayRating(rating) {
-    let ratingIcons = []
-    for(let i = 0; i < 10-rating; i++){
-        ratingIcons.push({
-            className: "h-5 w-5 bg-gray-300 rounded-full p-0.5 transform -rotate-6",
-            strokeWidth: 3 ,
-            strokeColor: "white"
-        })
-    }
-    for(let i = 0; i < rating; i++){
-        ratingIcons.push({
-            className: "rounded-full h-5 w-5 bg-gradient-to-br from-pink-500 via-red-500 p-0.5 to-yellow-500 transform -rotate-6",
-            strokeWidth: 3,
-            strokeColor: "white"
-        })
-    }
-    return ratingIcons
-}
+
 
 
 function Tagline({ movie }) {
