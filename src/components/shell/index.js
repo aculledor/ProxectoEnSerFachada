@@ -133,7 +133,7 @@ function AppMenu() {
                         <span className='text-xs font-bold'>{ email }</span>
                     </span>
 
-                <img className = 'h-12 w-12 rounded-full shadow'
+                <img className = 'h-12 w-12 rounded-full shadow object-cover'
                      alt = 'profile icon'
                      src = { picture } />
             </Menu.Button>

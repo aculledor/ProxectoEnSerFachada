@@ -136,6 +136,7 @@ export default class API {
 
     //Get one user
     async findUser(id = '') {
+
         const data =  await fetch(`/api/users/${id}`, {
             method: 'GET',
             headers: {
@@ -195,7 +196,7 @@ export default class API {
     }
 
     //Create an assessment
-    async createComment(comment = {id : 0, user : "test@test.com", movie : "111", rating : 5, comment : "I like it"}) {
+    async createComment(comment = {id : 0, user : "test@test.com", movie : "111", movieTitle : "Moby Dick", rating : 5, comment : "I like it"}) {
         const url = "/api/movies/" + comment.movie + "/assessments";
         console.log(JSON.stringify(comment))
         const response = await fetch(url, {
@@ -215,7 +216,7 @@ export default class API {
     }
 
     //Create an user
-    async createUser(email = '', pass = '', nombre = '', birthday = '') {
+    async createUser({email = '', name = '', password = '', birthday = {day: 0, month: 0, year: 0}}) {
         const url = "/api/users";
         const response = await fetch(url, {
             method: 'POST',
@@ -225,15 +226,11 @@ export default class API {
             },
             body: JSON.stringify({
                 "email": email,
-                "name" : nombre,
+                "name" : name,
                 "country" : '',
                 "picture" : '',
-                "birthday" : {
-                    "day" : 0,
-                    "month" : 0,
-                    "year" : 0
-                },
-                "password": pass,
+                "birthday" : birthday,
+                "password": password,
                 "roles" : [ "ROLE_USER"]
             })
         })

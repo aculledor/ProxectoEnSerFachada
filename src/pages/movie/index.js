@@ -25,7 +25,6 @@ const backdrop = movie => {
     return backdrop ? backdrop : poster
 }
 const poster = movie => movie?.resources?.find(res => res?.type === 'POSTER')?.url
-let movieID = '';
 
 export default function Movie() {
     const { id } = useParams()
@@ -126,14 +125,7 @@ function Cast({ movie }) {
 
 export function Comments({ movie }) {
     const { comments, createComment } = useComments({ filter: { movie : movie.id } } )
-    const [score, setScore] = useState(0)
-    const [comment, setComment] = useState('')
     const { user: { name = '', email = '', picture = '' } = { name: '', email: '', picture: sampleData.avatar } } = useUser()
-
-    const create = async (event) => {
-        event.preventDefault()
-        await createComment({movie : movie.id, rating : score, comment : comment, user : email})
-    }
 
     function Comment({ comment }) {
         let ratingIcons = ArrayRating(comment.rating)
@@ -153,28 +145,37 @@ export function Comments({ movie }) {
         </li>
     }
 
+    const [score, setScore] = useState(0)
     function PublishComment({ movie }) {
+        const [comment, setComment] = useState('')
+
+        const create = async (event) => {
+            event.preventDefault()
+            await createComment({user : email, movie : movie.id, movieTitle : movie.title, rating : score, comment : comment})
+            setComment('')
+            setScore(0)
+        }
+
         return <>
             <form className = 'mt-16 mb-16 relative h-64'
-                  onSubmit={create}
                   autoComplete = 'off' >
                 <span className = 'max-w-1/5 max-h-min block font-bold block flex float-left'>Y a ti, que te ha parecido?</span>
                 <br/><br/>
                 {[...new Array(10).keys()].map(id =>
-                    <button id={10-id} key={10-id} className='w-5 h-5 mr-1 focus:outline-none rounded-full' type='submit' onClick={() => setScore(10-id)} >
+                    <button id={10-id} key={10-id} className='w-5 h-5 mr-1 focus:outline-none rounded-full' onClick={() => setScore(10-id)} >
                         {<Film className={10-id <= score ?  'rounded-full h-5 w-5 bg-gradient-to-br from-pink-500 via-red-500 p-0.5 to-yellow-500 transform -rotate-6' : 'h-5 w-5 bg-gray-300 rounded-full p-0.5 transform -rotate-6'}
                                strokeWidth={3}
                                strokeColor={'white'}/>}
                     </button>
                 )}
-                <textarea className = 'absolute top-0 right-0 min-w-3/4 mb-16 border-2 rounded-md p-8 shadow-xl min-w-3/4 h-64'
+                <textarea name="comment" className = 'absolute top-0 right-0 min-w-3/4 mb-16 border-2 rounded-md p-8 shadow-xl min-w-3/4 h-64'
                           inputMode='text' placeholder='Escribe aqui tu comentario y comparte tu opinión con otros usuarios! Pero por favor, evita hacer spoilers'
-                          value = {comment} onChange={ evt => setComment(evt.target.value) } />
+                          value={comment} onChange={evt => setComment(evt.target.value)}/>
                 <button className='absolute bottom-0 left-0 w-1/5 h-16 font-bold text-white rounded-md
                                 bg-gradient-to-br from-pink-500 via-red-500 p-0.5 to-yellow-500
                                 hover:from-green-500 hover:to-blue-500 hover:via-teal-500
                                 focus:from-green-500 focus:to-blue-500 focus:via-teal-500 focus:outline-none'
-                        type = 'submit' variant = 'secondary' >
+                        onClick={create} >
                     Publicar
                 </button>
             </form>

@@ -33,9 +33,9 @@ export default function Login() {
                     name: data.get('name'),
                     password: data.get('password'),
                     birthday: {
-                        day,
-                        month,
-                        year
+                        day : day,
+                        month : month,
+                        year : year
                     }
                 })
 
