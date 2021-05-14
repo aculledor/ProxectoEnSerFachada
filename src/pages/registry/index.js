@@ -10,7 +10,7 @@ import { AtSymbolOutline, FingerPrintOutline, UserOutline, CalendarOutline } fro
 export default function Login() {
     const history = useHistory()
     const { isAuthenticated } = useContext(AuthenticationContext)
-    const { create } = useUser()
+    const { createUser } = useUser()
     const [ errors, setErrors ] = useState(false)
 
 
@@ -28,7 +28,7 @@ export default function Login() {
             if(date.getDate() !== day || date.getMonth() !== month - 1 || date.getFullYear() !== year) {
                 setErrors(true)
             } else {
-                await create({
+                await createUser({
                     email: data.get('user'),
                     name: data.get('name'),
                     password: data.get('password'),

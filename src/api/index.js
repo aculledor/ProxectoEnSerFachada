@@ -136,7 +136,9 @@ export default class API {
 
     //Get one user
     async findUser(id = '') {
-
+        if ( id == null){
+            return
+        }
         const data =  await fetch(`/api/users/${id}`, {
             method: 'GET',
             headers: {
@@ -245,7 +247,81 @@ export default class API {
     }
 
     //Update an user
-    async updateUser(id, user) {
-        console.log(user)
+    async updateUser(newUser) {
+        const operations = []
+        const user = await this.findUser(newUser.email)
+        if (newUser.country !== user.country){
+            operations.push({"op": "replace", "path" : "/country", "value" : newUser.country })
+        }
+        if (newUser.picture !== user.picture){
+            operations.push({"op": "replace", "path" : "/picture", "value" : newUser.picture })
+        }
+        if (newUser.name !== user.name){
+            operations.push({"op": "replace", "path" : "/name", "value" : newUser.name })
+        }
+        console.log(JSON.stringify(operations))
+        if (operations === []){
+            return false
+        }
+        const url = `/api/users/${newUser.email}`;
+        const response = await fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': this.#token,
+                'Content-Type': 'application/json-patch+json',
+                'Accepts': 'application/json'
+            },
+            body: JSON.stringify(operations)
+        })
+
+        return await response.json()
+    }
+
+    //Update a movie
+    async updateMovie(newMovie) {
+        const operations = []
+        const movie = await this.findMovie(newMovie.id)
+        if (newMovie.overview !== movie.overview){
+            operations.push({"op": "replace", "path" : "/overview", "value" : newMovie.overview })
+        }
+        newMovie.resources.forEach( resource => {
+            const position = newMovie.resources.findIndex(r => r === resource)
+            if (position >= movie.resources.length) {
+                operations.push({"op": "add", "path" : `/resources/-`, "value" : {
+                        "url": newMovie.resources[position].url,
+                        "type": newMovie.resources[position].type
+                    } })
+            }
+            else if (movie.resources[position].url !== newMovie.resources[position].url) {
+                if (newMovie.resources[position].url === '') {
+                    operations.push({"op": "remove", "path" : `/resources/${position}`})
+                }
+                else {
+                    operations.push({
+                        "op": "replace", "path": `/resources/${position}`, "value": {
+                            "url": newMovie.resources[position].url,
+                            "type": newMovie.resources[position].type
+                        }
+                    })
+                }
+            }
+        })
+
+        console.log(JSON.stringify(operations))
+        if (operations === []){
+            return false
+        }
+        const url = `/api/movies/${newMovie.id}`;
+        const response = await fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': this.#token,
+                'Content-Type': 'application/json-patch+json',
+                'Accepts': 'application/json'
+            },
+            body: JSON.stringify(operations)
+        })
+
+        return await response.json()
     }
 }

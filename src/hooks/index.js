@@ -24,7 +24,14 @@ export function useMovie(id = '') {
             .then(setData)
     }, [id])
 
-    return data
+    const update = movie => API.instance()
+        .updateMovie(movie)
+        .then(movie => setData(movie))
+
+    return {
+        movie: data,
+        updateMovie: update
+    }
 }
 
 export function useUser(id = null) {
@@ -42,13 +49,13 @@ export function useUser(id = null) {
             .then(user => setData(user))
 
     const update = user => API.instance()
-            .updateUser(id, user)
+            .updateUser(user)
             .then(user => setData(user))
 
     return {
         user: data,
-        create,
-        update
+        createUser: create,
+        updateUser: update
     }
 }
 
