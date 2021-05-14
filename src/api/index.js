@@ -325,4 +325,42 @@ export default class API {
 
         return await response.json()
     }
+
+    //Get friendships
+    async findFriendships(userID = '') {
+        const data =  await fetch(`/api/users/${userID}/friends`, {
+            method: 'GET',
+            headers: {
+                'Authorization': this.#token,
+                'Accepts': 'application/json'
+            }
+        })
+        return await data.json()
+    }
+
+    //Update a friendship
+    async acceptFriendship(userID = '', friendID = '') {
+        const url = `/api/users/${friendID}/friends/${userID}`;
+        const response = await fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': this.#token,
+                'Accepts': 'application/json'
+            }
+        })
+
+        return await response.json()
+    }
+
+    //Update a friendship
+    async deleteFriendship(userID = '', friendID = '') {
+        const url = `/api/users/${friendID}/friends/${userID}`;
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': this.#token
+            }
+        })
+        return response;
+    }
 }

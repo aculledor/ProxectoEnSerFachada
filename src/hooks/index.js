@@ -84,3 +84,36 @@ export function useComments(query = {}){
         createComment: create
     }
 }
+
+export function useFriendships(id = null) {
+    const [data, setData] = useState([])
+    const userId = id === null ? localStorage.getItem('user') : id
+
+    useEffect(() => {
+        API.instance()
+            .findFriendships(userId)
+            .then(setData)
+    }, [userId])
+
+    const accept = friendID => API.instance()
+        .acceptFriendship(userId, friendID)
+        .then( () => {
+            API.instance()
+                .findFriendships(userId)
+                .then(setData)
+        })
+
+    const deleteF = friendID => API.instance()
+        .deleteFriendship(userId, friendID)
+        .then( () => {
+            API.instance()
+                .findFriendships(userId)
+                .then(setData)
+        })
+
+    return {
+        friendships: data,
+        acceptFriendship: accept,
+        deleteFriendship: deleteF
+    }
+}
