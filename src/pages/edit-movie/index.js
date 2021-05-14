@@ -186,7 +186,7 @@ export default function Profile() {
 
         <Link variant = 'primary'
               className = 'rounded-full absolute text-white top-4 left-8 flex items-center pl-2 pr-4 py-2 gap-4'
-              to = '/'
+              to ={`/movies/${id}`}
         >
             <Back className = 'w-8 h-8'/>
             <span>Volver</span>

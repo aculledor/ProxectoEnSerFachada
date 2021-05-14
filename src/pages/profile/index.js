@@ -20,6 +20,13 @@ export default function Profile() {
              alt = { `${user.name} backdrop` }
              className = 'absolute top-2 left-0 right-0 w-full object-cover filter blur transform scale-105' />
 
+        <Link variant = 'primary'
+              className = 'rounded-full absolute text-white top-4 right-8 flex items-center px-2 py-2 gap-4'
+              to = {`/profile/edit`}
+        >
+            <Edit className = 'w-8 h-8'/>
+        </Link>
+
         <div className = 'mx-auto w-full max-w-screen-2xl p-8'>
             <Header user = { user } />
             <Comments user = { user } />

@@ -250,13 +250,14 @@ export default class API {
     async updateUser(newUser) {
         const operations = []
         const user = await this.findUser(newUser.email)
-        if (newUser.country !== user.country){
+        console.log(newUser)
+        if (newUser.country != undefined && newUser.country !== user.country){
             operations.push({"op": "replace", "path" : "/country", "value" : newUser.country })
         }
-        if (newUser.picture !== user.picture){
+        if (newUser.picture != undefined && newUser.picture !== user.picture){
             operations.push({"op": "replace", "path" : "/picture", "value" : newUser.picture })
         }
-        if (newUser.name !== user.name){
+        if (newUser.name != undefined && newUser.name !== user.name){
             operations.push({"op": "replace", "path" : "/name", "value" : newUser.name })
         }
         console.log(JSON.stringify(operations))
