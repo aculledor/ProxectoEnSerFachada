@@ -1,9 +1,9 @@
-import { useEffect, useReducer } from 'react'
-import { Redirect } from 'react-router-dom'
+import {useEffect, useReducer} from 'react'
+import {Redirect} from 'react-router-dom'
 
-import { Shell, Button } from '../../components'
+import {Button, Shell} from '../../components'
 
-import { ReactComponent as Image } from './not-found.svg'
+import {ReactComponent as Image} from './not-found.svg'
 
 export default function NotFound() {
     const [ timeout, dispatch ] = useReducer(

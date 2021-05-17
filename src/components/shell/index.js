@@ -1,19 +1,20 @@
-import { useContext, useState } from 'react'
-import { useHotkeys } from 'react-hotkeys-hook'
-import { Link } from 'react-router-dom'
+import {useContext, useState} from 'react'
+import {useHotkeys} from 'react-hotkeys-hook'
+import {Link} from 'react-router-dom'
 import {
     ChevronUpOutline as Close,
+    DocumentAddOutline as New,
     LogoutOutline as Logout,
-    UserGroupOutline as Friends,
-    UserOutline as Profile,
     SearchOutline as Search,
-    DocumentAddOutline as New } from '@graywolfai/react-heroicons'
-import { Menu, Transition } from '@headlessui/react'
-import { useDebouncedCallback as useDebounce } from 'use-debounce'
+    UserGroupOutline as Friends,
+    UserOutline as Profile
+} from '@graywolfai/react-heroicons'
+import {Menu, Transition} from '@headlessui/react'
+import {useDebouncedCallback as useDebounce} from 'use-debounce'
 
-import { AuthenticationContext } from '../../context'
-import { Logo, Button, Input, MovieList } from '../'
-import { useUser } from '../../hooks'
+import {AuthenticationContext} from '../../context'
+import {Button, Input, Logo, MovieList} from '../'
+import {useUser} from '../../hooks'
 import sampleData from "../../helper/sampleData";
 
 function tryParse(query) {
@@ -124,6 +125,7 @@ export function Shell({children, className = ''}) {
 function AppMenu() {
     const { logout } = useContext(AuthenticationContext)
     const { user: { name = '', email = '', picture = '' } = { name: '', email: '', picture: sampleData.avatar } } = useUser()
+    console.log(name +' '+email+' '+picture)
 
     return <Menu>
         { ({open}) => <>
@@ -135,7 +137,7 @@ function AppMenu() {
 
                 <img className = 'h-12 w-12 rounded-full shadow object-cover'
                      alt = 'profile icon'
-                     src = { picture } />
+                     src = { picture ? picture : sampleData.avatar } />
             </Menu.Button>
             <Transition show = { open }
                         className = 'absolute right-4 top-0 pt-2 transform-gpu duration-500 ease-spring'

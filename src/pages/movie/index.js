@@ -1,11 +1,11 @@
-import { useParams } from 'react-router-dom'
-import { ArrowCircleLeftOutline as Back, PencilAltOutline as Edit } from '@graywolfai/react-heroicons'
+import {useParams} from 'react-router-dom'
+import {ArrowCircleLeftOutline as Back, PencilAltOutline as Edit} from '@graywolfai/react-heroicons'
 import ReactPlayer from 'react-player'
 import Film from "../../components/icons/Film";
 
-import { Shell, Link, TODO, Separator } from '../../components'
+import {Link, Separator, Shell} from '../../components'
 
-import {useMovie, useComments, useUser} from '../../hooks'
+import {useComments, useMovie, useUser} from '../../hooks'
 
 
 import Disney from './icons/disney_plus.png'

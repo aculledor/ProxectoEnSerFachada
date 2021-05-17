@@ -1,4 +1,4 @@
-import { FilmOutline as Film } from '@graywolfai/react-heroicons'
+import {FilmOutline as Film} from '@graywolfai/react-heroicons'
 
 export function Logo({className = '', logoSize = 'w-8 h-8', inverse, ...props}) {
     return <span className = {`flex justify-center items-center 

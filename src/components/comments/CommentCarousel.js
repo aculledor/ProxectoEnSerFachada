@@ -1,8 +1,8 @@
-import { useEffect, useReducer } from 'react'
-import { Link } from 'react-router-dom'
-import { EyeOutline as ViewMore } from '@graywolfai/react-heroicons'
+import {useEffect, useReducer} from 'react'
+import {Link} from 'react-router-dom'
+import {EyeOutline as ViewMore} from '@graywolfai/react-heroicons'
 
-import { useMovies } from '../../hooks'
+import {useMovies} from '../../hooks'
 
 export function Carousel({query = {}}) {
     const { content = [] } = useMovies(query)

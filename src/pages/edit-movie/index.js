@@ -1,11 +1,9 @@
-import { useParams } from 'react-router-dom'
-import {ArrowCircleLeftOutline as Back, AtSymbolOutline, SaveOutline as Save} from '@graywolfai/react-heroicons'
-import ReactPlayer from 'react-player'
-import Film from "../../components/icons/Film";
+import {useParams} from 'react-router-dom'
+import {ArrowCircleLeftOutline as Back, SaveOutline as Save} from '@graywolfai/react-heroicons'
 
-import {Shell, Link, TODO, Separator, Button, Input} from '../../components'
+import {Link, Separator, Shell} from '../../components'
 
-import {useMovie, useComments, useUser} from '../../hooks'
+import {useMovie} from '../../hooks'
 
 
 import Disney from './icons/disney_plus.png'
@@ -16,7 +14,7 @@ import Netflix from './icons/netflix.png'
 import Prime from './icons/prime_video.png'
 import Youtube from './icons/youtube.png'
 import sampleData from "../../helper/sampleData";
-import {createContext, useContext, useState} from "react";
+import {useState} from "react";
 
 const backdrop = movie => {
     const backdrop = movie?.resources?.find(res => res?.type === 'BACKDROP')?.url

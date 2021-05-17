@@ -1,4 +1,4 @@
-import { Shell, TODO } from '../../components'
+import {Shell, TODO} from '../../components'
 
 export default function CreateMovie() {
     return <Shell className = 'p-4'>

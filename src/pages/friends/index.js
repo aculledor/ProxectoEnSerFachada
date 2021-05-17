@@ -1,7 +1,5 @@
-import {Link, Separator, Shell, TODO} from '../../components'
+import {Separator, Shell} from '../../components'
 import {useFriendships, useUser} from "../../hooks";
-import {PencilAltOutline as Edit, SaveOutline as Save} from "@graywolfai/react-heroicons";
-import Film from "../../components/icons/Film";
 
 const poster = user => user?.picture
 

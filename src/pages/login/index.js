@@ -1,10 +1,10 @@
-import { useContext, useState } from 'react'
-import { Redirect } from 'react-router-dom'
-import { AtSymbolOutline, FingerPrintOutline } from '@graywolfai/react-heroicons'
+import {useContext, useState} from 'react'
+import {Redirect} from 'react-router-dom'
+import {AtSymbolOutline, FingerPrintOutline} from '@graywolfai/react-heroicons'
 
-import { AuthenticationContext } from '../../context'
+import {AuthenticationContext} from '../../context'
 
-import { Logo, Button, Input, Link } from '../../components'
+import {Button, Input, Link, Logo} from '../../components'
 
 export default function Login() {
     const { login, isAuthenticated, errors, reset } = useContext(AuthenticationContext)

@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {BrowserRouter as Router, Switch, Route, Redirect} from 'react-router-dom'
+import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom'
 import ReactFontLoader from 'react-font-loader'
 
-import { SecuredApp, SecuredRoute } from './context'
+import {SecuredApp, SecuredRoute} from './context'
 
 import Login from './pages/login'
 import Register from './pages/registry'

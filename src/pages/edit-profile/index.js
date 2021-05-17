@@ -1,17 +1,8 @@
-import { useParams } from 'react-router-dom'
-import {
-    ArrowCircleLeftOutline as Back,
-    PencilAltOutline as Edit,
-    SaveOutline as Save
-} from '@graywolfai/react-heroicons'
-import ReactPlayer from 'react-player'
-import Film from "../../components/icons/Film";
+import {ArrowCircleLeftOutline as Back, SaveOutline as Save} from '@graywolfai/react-heroicons'
 
-import { Shell, Link, Separator } from '../../components'
-
-import sampleData from "../../helper/sampleData";
+import {Link, Shell} from '../../components'
 import {useState} from "react";
-import {useComments, useUser} from "../../hooks";
+import {useUser} from "../../hooks";
 
 const poster = user => user?.picture
 

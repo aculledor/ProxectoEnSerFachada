@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { ChevronLeftOutline as Left, ChevronRightOutline as Right } from '@graywolfai/react-heroicons'
+import {useState} from 'react'
+import {Link} from 'react-router-dom'
+import {ChevronLeftOutline as Left, ChevronRightOutline as Right} from '@graywolfai/react-heroicons'
 
-import { Button } from '../'
+import {Button} from '../'
 
-import { useMovies } from '../../hooks'
+import {useMovies} from '../../hooks'
 import sampleData from "../../helper/sampleData";
 
 export function MovieList({

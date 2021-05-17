@@ -1,11 +1,11 @@
 import {useContext, useState} from 'react'
-import { Redirect, useHistory } from 'react-router-dom'
+import {Redirect, useHistory} from 'react-router-dom'
 
-import { AuthenticationContext } from '../../context'
+import {AuthenticationContext} from '../../context'
 
-import {Logo, Link, Input, Button} from '../../components'
-import { useUser } from '../../hooks'
-import { AtSymbolOutline, FingerPrintOutline, UserOutline, CalendarOutline } from '@graywolfai/react-heroicons'
+import {Button, Input, Link, Logo} from '../../components'
+import {useUser} from '../../hooks'
+import {AtSymbolOutline, CalendarOutline, FingerPrintOutline, UserOutline} from '@graywolfai/react-heroicons'
 
 export default function Login() {
     const history = useHistory()

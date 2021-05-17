@@ -1,4 +1,4 @@
-import { Shell, MovieList, Carousel } from '../../components'
+import {Carousel, MovieList, Shell} from '../../components'
 
 export default function Movies() {
     return <Shell>
