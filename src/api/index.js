@@ -106,7 +106,6 @@ export default class API {
         if (size) url += (url === '')? 'size='+size : '&size='+size
 
         url = (url === '')? '/api/movies' : '/api/movies?'+url
-        console.log(url)
 
         const data =  await fetch(url, {
             method: 'GET',
@@ -182,7 +181,6 @@ export default class API {
 
         let url = (movie)? '/api/movies/'+movie+'/assessments' : '/api/users/'+user+'/assessments'
         if (user !== '') url += '?' + urlAux
-        console.log(url)
 
         const data =  await fetch(url, {
             method: 'GET',
@@ -198,7 +196,6 @@ export default class API {
     //Create an assessment
     async createComment(comment = {id : 0, user : "test@test.com", movie : "111", movieTitle : "Moby Dick", rating : 5, comment : "I like it"}) {
         const url = "/api/movies/" + comment.movie + "/assessments";
-        console.log(JSON.stringify(comment))
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -248,7 +245,6 @@ export default class API {
     async updateUser(newUser) {
         const operations = []
         const user = await this.findUser(newUser.email)
-        console.log(newUser)
         if (newUser.country != undefined && newUser.country !== user.country){
             operations.push({"op": "replace", "path" : "/country", "value" : newUser.country })
         }
@@ -258,7 +254,6 @@ export default class API {
         if (newUser.name != undefined && newUser.name !== user.name){
             operations.push({"op": "replace", "path" : "/name", "value" : newUser.name })
         }
-        console.log(JSON.stringify(operations))
         if (operations === []){
             return false
         }
@@ -306,7 +301,6 @@ export default class API {
             }
         })
 
-        console.log(JSON.stringify(operations))
         if (operations === []){
             return false
         }

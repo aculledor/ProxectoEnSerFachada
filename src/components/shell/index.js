@@ -125,7 +125,6 @@ export function Shell({children, className = ''}) {
 function AppMenu() {
     const { logout } = useContext(AuthenticationContext)
     const { user: { name = '', email = '', picture = '' } = { name: '', email: '', picture: sampleData.avatar } } = useUser()
-    console.log(name +' '+email+' '+picture)
 
     return <Menu>
         { ({open}) => <>
